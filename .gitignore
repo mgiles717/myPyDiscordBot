@@ -117,7 +117,7 @@ dmypy.json
 /config.json
 /api_keys.json
 /depricated
-/db.csv
+/db.json
 
 /.idea
 /ffmpeg

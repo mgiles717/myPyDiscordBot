@@ -4,14 +4,13 @@ import discord
 from discord.ext import commands
 
 
-
 class Destiny2Handler(commands.Cog):
     def __init__(self, client=None):
         self.client = client
         #! DELETE WHEN SOLVED
         self.item = {}
         # Path to config file
-        path = "C:/ProgrammingProjects/Repositories/myPyDiscordBot/api_keys.json"
+        path = "C:/ProgrammingProjects/discordpy/api_keys.json"
         with open(path) as file:
             data = json.load(file)
             self.key = data.get('destiny_2_api_key')

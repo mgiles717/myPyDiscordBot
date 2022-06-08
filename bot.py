@@ -6,6 +6,7 @@ from discord.ext import commands
 from modules import destiny2
 from modules import audio
 from modules import responses
+from modules import gamba
 
 with open('config.json') as file:
     data = json.load(file)
@@ -15,7 +16,7 @@ with open('config.json') as file:
 
 class Bot:
     def __init__(self):
-        cogs = [audio, destiny2, responses]
+        cogs = [audio, destiny2, responses, gamba]
         self.client = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 
         for i in range(len(cogs)):
