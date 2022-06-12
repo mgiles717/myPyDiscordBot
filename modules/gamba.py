@@ -9,86 +9,17 @@ import discord
 import random
 import json
 import os
+from modules.currency import Currency
 from discord.ext import commands
 
-db_path = os.getcwd() + "\db.json"
 
 class Gamba(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.seed = random.seed()
-        self.save_flag = True
-        
-        with open(db_path, 'r') as f:
-            self.db = json.loads(f.read())
-            
-        print(f"The current users and their respective points: \n {self.db}")
-
-    """
-    Helper functions below, feel free to add more if necessary to perform operations on points, 
-    however most functionality should be implace now.
-    Due to the need to append to the database, accessing the database directly is needed. e.g
-    self.db['users']['the users id here']['points']
-    """
-    
-    def fetch_user_index(self, ctx):
-        for i, val in enumerate(self.db['users']):
-            if val['id'] == ctx.author.id:
-                return i
-        return False
-    
-    def get_points(self, ctx):
-        return self.db['users'][self.fetch_user_index(ctx)]['points']
-    
-    # Not enough points flag, used to determine if the user has enough points to perform an action
-    def check_points(self, ctx, amount):
-        if self.get_points(ctx) >= amount:
-            return True
-        else: return False
-    
-    def change_points(self, ctx, amount):
-        self.db['users'][self.fetch_user_index(ctx)]['points'] += amount
-        self.save_flag = False
-        
-    def change_daily(self, ctx, reset: bool):
-        self.db['users'][self.fetch_user_index(ctx)]['daily'] = int(reset)
-        self.save_flag = False
-        
-    def reset_dailies(self):
-        for i in self.db['users']:
-            i['daily'] = 0
-        self.save_flag = False
-    
-    @commands.command()
-    async def create(self, ctx):
-        self.db['users'].append({'id': ctx.author.id, 'points': 0, 'daily': 0, 'items': []})  
-        await ctx.send(f"User created!")
-    
-    @commands.command()
-    async def save(self, ctx):
-        if self.save_flag == False:
-            with open(db_path, 'w') as f:
-                f.write(json.dumps(self.db))
-                self.save_flag = True
-                await ctx.send("Saved!")
-    
-    """
-    Currency balancing methods below
-    """
-    
-    @commands.command()
-    async def daily(self, ctx):
-        if self.db['users'][self.fetch_user_index(ctx)]['daily'] == 0:
-            self.change_points(ctx, 100)
-            self.change_daily(ctx, 1)
-            await ctx.send(f"You have received 100 points!")
-        else:
-            await ctx.send(f"You've already received your daily today.")
-        
-    @commands.command()
-    async def balance(self, ctx):
-        await ctx.send(f"You have {self.db['users'][self.fetch_user_index(ctx)]['points']} points.")
-    
+        # Currently creates 2 currency objects, 
+        # however need access to the currency object in bot.py
+        self.currency = Currency(client)
     """
     Gambling games below
     """
@@ -140,5 +71,5 @@ def setup(client):
     client.add_cog(Gamba(client))
     
 if __name__ == "__main__":
-    with open('C:\ProgrammingProjects\discordpy\db.json', 'r') as f:
-        tDatabase = json.loads(f.read())
+    g = Gamba()
+    print(g.currency)
