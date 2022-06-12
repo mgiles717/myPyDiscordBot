@@ -106,7 +106,7 @@ class Gamba(commands.Cog):
             else:
                 self.change_points(ctx, -bet)
                 await ctx.send(f"You have lost {bet} points! The roll was {roll}.")
-        if roll<50:
+        if roll<=50:
             if arg == 'l':
                 self.change_points(ctx, bet)
                 await ctx.send(f"You have won {bet} points! The roll was {roll}.")
