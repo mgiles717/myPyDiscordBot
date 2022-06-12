@@ -13,7 +13,7 @@ from discord.ext import commands
 
 db_path = os.getcwd() + "\db.json"
 
-class Gamba(commands.Cog):
+class Currency(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.seed = random.seed()
@@ -137,7 +137,7 @@ class Gamba(commands.Cog):
             await ctx.send(f"The roll was {roll}. You have lost {bet} points!")
         
 def setup(client):
-    client.add_cog(Gamba(client))
+    client.add_cog(Currency(client))
     
 if __name__ == "__main__":
     with open('C:\ProgrammingProjects\discordpy\db.json', 'r') as f:
