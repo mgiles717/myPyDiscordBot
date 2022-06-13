@@ -1,32 +1,43 @@
 """
-Gambling module for the bot. 
-Note to future self, refactor the database aspect of this module to another module.
+Currency module for the bot. All currency handling methods are 
+to be placed in this module.
 """
 
 import discord
+import os
+import json
 # Creating random numbers using random is only psuedo random, 
 # important to note that the random number is not truly random
 import random
-import json
-import os
+
 from discord.ext import commands
 
-db_path = os.getcwd() + "\db.json"
+# When the bot initalises, it will create a currency object.
+# When that object is initialised, os.getcwd() will get the directory of
+# the bot.py file, therefore you can use this to access the config file.
+db_path = os.getcwd() + "./config/db.json"
+items_path = os.getcwd() + "./config/shop.json"
 
 class Currency(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.seed = random.seed()
         self.save_flag = True
-        
         with open(db_path, 'r') as f:
             self.db = json.loads(f.read())
+        with open(items_path, 'r') as f:
+            self.shop_items = json.loads(f.read())
             
-        print(f"The current users and their respective points: \n {self.db}")
-
+        print(f"The current users: ")
+        for i in self.db['users']:
+            print(f"ID: {i['id']}, Points: {i['points']}, Daily counter: {i['daily']}, Items: {i['items']}")
+        
     """
-    Helper functions below, feel free to add more if necessary to perform operations on points, 
+    Helper functions below:
+    
+    Feel free to add more if necessary to perform operations on points, 
     however most functionality should be implace now.
+    
     Due to the need to append to the database, accessing the database directly is needed. e.g
     self.db['users']['the users id here']['points']
     """
@@ -73,7 +84,7 @@ class Currency(commands.Cog):
                 await ctx.send("Saved!")
     
     """
-    Currency balancing methods below
+    Economy balancing methods below:
     """
     
     @commands.command()
@@ -90,7 +101,7 @@ class Currency(commands.Cog):
         await ctx.send(f"You have {self.db['users'][self.fetch_user_index(ctx)]['points']} points.")
     
     """
-    Gambling games below
+    Gambling below:
     """
     
     @commands.command()
@@ -135,7 +146,21 @@ class Currency(commands.Cog):
         else: 
             self.change_points(ctx, -bet)
             await ctx.send(f"The roll was {roll}. You have lost {bet} points!")
-        
+    
+    """
+    Shop below:
+    """
+    @commands.command()
+    async def shopitems(self, ctx):
+        items_embed = discord.Embed(title="Shop Items", description="All available items in the shop")
+        for i in self.shop_items["items"]:
+            items_embed.add_field(name=f'{i["name"]}', value=f'{i["price"]}')
+        await ctx.send(embed=items_embed)
+    
+"""
+Leave these alone
+"""
+       
 def setup(client):
     client.add_cog(Currency(client))
     

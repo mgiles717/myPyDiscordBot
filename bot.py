@@ -8,7 +8,7 @@ from modules import audio
 from modules import responses
 from modules import currency
 
-with open('config.json') as file:
+with open('./config/config.json') as file:
     data = json.load(file)
     token = data.get('token')
     prefix = data.get('prefix')

@@ -1,8 +1,11 @@
+import discord
+import os
 import json
 import requests
-import discord
+
 from discord.ext import commands
 
+api_keys_path = os.getcwd() + "./config/api_keys.json"
 
 class Destiny2Handler(commands.Cog):
     def __init__(self, client=None):
@@ -10,9 +13,8 @@ class Destiny2Handler(commands.Cog):
         #! DELETE WHEN SOLVED
         self.item = {}
         # Path to config file
-        path = "C:/ProgrammingProjects/discordpy/api_keys.json"
-        with open(path) as file:
-            data = json.load(file)
+        with open(api_keys_path) as f:
+            data = json.load(f)
             self.key = data.get('destiny_2_api_key')
 
         oauth_session = requests.Session()
